@@ -1,58 +1,120 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
+import { X } from 'lucide-react'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
+  isOpen: boolean
+  onClose: () => void
+  title?: string
+  children: React.ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+  const font = "'DM Sans', 'Helvetica Neue', sans-serif"
+
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'
     }
-    
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) onClose()
+    }
+
+    if (isOpen) document.addEventListener('keydown', handleEscape)
     return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-  
-  if (!isOpen) return null;
-  
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <>
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-overlay { animation: fadeIn 0.2s ease; }
+        .modal-content { animation: slideUp 0.3s ease; }
+      `}</style>
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="modal-overlay"
+        style={{
+          position: 'fixed',
+          inset: '0',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '16px',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(4px)',
+        }}
         onClick={onClose}
-      />
-      <div className="relative bg-card rounded-2xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-        {title && (
-          <div className="flex items-center justify-between p-6 border-b border-border">
-            <h2 className="text-xl font-bold text-text-primary">{title}</h2>
-            <button
-              onClick={onClose}
-              className="text-text-secondary hover:text-text-primary transition-colors"
+      >
+        <div
+          className="modal-content"
+          style={{
+            position: 'relative',
+            background: '#FFFFFF',
+            borderRadius: '18px',
+            boxShadow: '0 20px 60px rgba(44,31,20,0.15)',
+            maxWidth: '480px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            border: '1px solid #EDE8DF',
+            fontFamily: font,
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {title && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '22px 26px',
+                borderBottom: '1px solid #EDE8DF',
+              }}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        )}
-        <div className="p-6">
-          {children}
+              <h2
+                style={{
+                  fontSize: '17px',
+                  fontWeight: 700,
+                  color: '#1C1209',
+                  margin: 0,
+                }}
+              >
+                {title}
+              </h2>
+              <button
+                onClick={onClose}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#A0917E',
+                  transition: 'color 0.15s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '4px',
+                }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#2C1F14')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = '#A0917E')}
+              >
+                <X size={20} />
+              </button>
+            </div>
+          )}
+          <div style={{ padding: '26px' }}>{children}</div>
         </div>
       </div>
-    </div>
-  );
-};
+    </>
+  )
+}
 
-export default Modal;
+export default Modal

@@ -1,53 +1,101 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
-  isLoading?: boolean;
-  children: React.ReactNode;
+type ButtonVariant = 'primary' | 'secondary' | 'danger'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode
+  variant?: ButtonVariant
+  loading?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  children,
-  className = '',
-  disabled,
-  ...props
-}) => {
-  const baseStyles = 'font-medium rounded-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
-  
-  const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-secondary hover:shadow-md',
-    secondary: 'bg-white text-text-primary border-2 border-border hover:border-primary hover:text-primary',
-    danger: 'bg-danger text-white hover:bg-red-600 hover:shadow-md',
-  };
-  
-  const sizeStyles = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
-  };
-  
-  return (
-    <button
-      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
-      disabled={disabled || isLoading}
-      {...props}
-    >
-      {isLoading ? (
-        <span className="flex items-center justify-center">
-          <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Loading...
-        </span>
-      ) : (
-        children
-      )}
-    </button>
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, variant = 'primary', loading = false, disabled, ...props }, ref) => {
+    const font = "'DM Sans', 'Helvetica Neue', sans-serif"
+
+    const variants: Record<ButtonVariant, { background: string; color: string; hover: string }> = {
+      primary: {
+        background: '#2C1F14',
+        color: '#F5E6C8',
+        hover: '#1C1209',
+      },
+      secondary: {
+        background: '#F3EDE3',
+        color: '#2C1F14',
+        hover: '#E8DED0',
+      },
+      danger: {
+        background: '#DC2626',
+        color: '#FFFFFF',
+        hover: '#B91C1C',
+      },
+    }
+
+    const style = variants[variant]
+
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || loading}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          padding: '11px 20px',
+          background: style.background,
+          color: style.color,
+          border: 'none',
+          borderRadius: '11px',
+          fontSize: '13.5px',
+          fontWeight: 600,
+          fontFamily: font,
+          cursor: disabled || loading ? 'not-allowed' : 'pointer',
+          transition: 'all 0.15s ease',
+          opacity: disabled || loading ? 0.6 : 1,
+          boxShadow: variant === 'primary' ? '0 4px 14px rgba(44,31,20,0.15)' : 'none',
+        }}
+        onMouseEnter={(e) => {
+          if (!disabled && !loading) {
+            (e.currentTarget as HTMLElement).style.background = style.hover
+            if (variant === 'primary') {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(44,31,20,0.25)'
+            }
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!disabled && !loading) {
+            (e.currentTarget as HTMLElement).style.background = style.background
+            if (variant === 'primary') {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(44,31,20,0.15)'
+            }
+          }
+        }}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <div
+              style={{
+                width: '14px',
+                height: '14px',
+                borderRadius: '50%',
+                border: `2px solid ${variant === 'primary' ? 'rgba(245,230,200,0.3)' : 'rgba(44,31,20,0.3)'}`,
+                borderTopColor: variant === 'primary' ? '#F5E6C8' : '#2C1F14',
+                animation: 'spin 0.8s linear infinite',
+              }}
+            />
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          </>
+        ) : null}
+        {children}
+      </button>
+    )
+  }
+)
+
+Button.displayName = 'Button'
   );
 };
 

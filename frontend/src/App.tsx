@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import Dashboard from './pages/Dashboard'
+import Tasks from './pages/Tasks'
 import ProtectedRoute from './routes/ProtectedRoute'
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
         } />
         <Route path="/tasks" element={
           <ProtectedRoute>
-            <Navigate to="/dashboard" replace />
+            <Tasks />
           </ProtectedRoute>
         } />
         <Route path="/teams" element={

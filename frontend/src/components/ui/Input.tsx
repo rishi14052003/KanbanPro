@@ -1,41 +1,102 @@
-import React from 'react';
+import React, { InputHTMLAttributes } from 'react'
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
-  icon?: React.ReactNode;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string
+  error?: string
+  icon?: React.ReactNode
 }
 
-const Input: React.FC<InputProps> = ({
-  label,
-  error,
-  icon,
-  className = '',
-  ...props
-}) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>((
+  { label, error, icon, placeholder, type = 'text', ...props },
+  ref
+) => {
+  const font = "'DM Sans', 'Helvetica Neue', sans-serif"
+
   return (
-    <div className="w-full">
+    <div style={{ width: '100%' }}>
       {label && (
-        <label className="block text-sm font-medium text-text-primary mb-2">
+        <label
+          style={{
+            display: 'block',
+            fontSize: '13px',
+            fontWeight: 600,
+            color: '#2C1F14',
+            marginBottom: '8px',
+            fontFamily: font,
+          }}
+        >
           {label}
         </label>
       )}
-      <div className="relative">
+      <div style={{ position: 'relative' }}>
         {icon && (
-          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary pointer-events-none">
+          <div
+            style={{
+              position: 'absolute',
+              left: '14px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#A0917E',
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             {icon}
           </div>
         )}
         <input
-          className={`w-full ${icon ? 'pl-12' : 'px-4'} py-3 rounded-2xl border-2 border-border bg-white text-text-primary placeholder-text-secondary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 ${error ? 'border-danger' : ''} ${className}`}
+          ref={ref}
+          type={type}
+          placeholder={placeholder}
+          style={{
+            width: '100%',
+            paddingLeft: icon ? '42px' : '14px',
+            paddingRight: '14px',
+            paddingTop: '11px',
+            paddingBottom: '11px',
+            borderRadius: '11px',
+            border: error ? '1.5px solid #DC2626' : '1.5px solid #DDD0BB',
+            background: '#FFFFFF',
+            color: '#2C1F14',
+            fontSize: '13.5px',
+            fontFamily: font,
+            fontWeight: 500,
+            transition: 'all 0.15s ease',
+            boxShadow: '0 1px 3px rgba(44,31,20,0.05)',
+            outline: 'none',
+          }}
+          onFocus={(e) => {
+            (e.target as HTMLInputElement).style.borderColor = error ? '#DC2626' : '#2C1F14'
+            (e.target as HTMLInputElement).style.boxShadow = error
+              ? '0 0 0 3px rgba(220,38,38,0.1)'
+              : '0 0 0 3px rgba(44,31,20,0.08)'
+          }}
+          onBlur={(e) => {
+            (e.target as HTMLInputElement).style.borderColor = error ? '#DC2626' : '#DDD0BB'
+            (e.target as HTMLInputElement).style.boxShadow = '0 1px 3px rgba(44,31,20,0.05)'
+          }}
           {...props}
         />
       </div>
       {error && (
-        <p className="mt-1 text-sm text-danger">{error}</p>
+        <p
+          style={{
+            marginTop: '6px',
+            fontSize: '12px',
+            color: '#DC2626',
+            fontFamily: font,
+            fontWeight: 500,
+          }}
+        >
+          {error}
+        </p>
       )}
     </div>
-  );
-};
+  )
+})
 
-export default Input;
+Input.displayName = 'Input'
+
+export default Input

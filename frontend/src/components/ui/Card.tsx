@@ -1,28 +1,35 @@
-import React from 'react';
+import React from 'react'
+
+type CardPadding = 'none' | 'sm' | 'md' | 'lg'
 
 interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  children: React.ReactNode
+  padding?: CardPadding
+  className?: string
 }
 
-const Card: React.FC<CardProps> = ({
-  children,
-  className = '',
-  padding = 'md',
-}) => {
-  const paddingStyles = {
-    none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-  };
-  
+const Card: React.FC<CardProps> = ({ children, padding = 'md', className = '' }) => {
+  const paddingMap: Record<CardPadding, string> = {
+    none: '0',
+    sm: '16px',
+    md: '22px',
+    lg: '32px',
+  }
+
   return (
-    <div className={`bg-card rounded-2xl shadow-sm border border-border ${paddingStyles[padding]} ${className}`}>
+    <div
+      style={{
+        background: '#FFFFFF',
+        borderRadius: '18px',
+        border: '1px solid #EDE8DF',
+        boxShadow: '0 1px 4px rgba(44,31,20,0.05)',
+        padding: paddingMap[padding],
+      }}
+      className={className}
+    >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card
