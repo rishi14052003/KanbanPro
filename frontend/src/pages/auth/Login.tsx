@@ -103,7 +103,15 @@ function Login() {
                     className={inputCls(fieldErrors.email)}
                   />
                 </div>
-                {fieldErrors.email && <p className="auth-field-error">{fieldErrors.email}</p>}
+                {fieldErrors.email && (
+                  <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {fieldErrors.email}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -131,7 +139,15 @@ function Login() {
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
-                {fieldErrors.password && <p className="auth-field-error">{fieldErrors.password}</p>}
+                {fieldErrors.password && (
+                  <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {fieldErrors.password}
+                  </p>
+                )}
               </div>
 
               {/* Remember + Forgot */}

@@ -143,7 +143,15 @@ function Signup() {
                     className={inputCls(fieldErrors.name)}
                   />
                 </div>
-                {fieldErrors.name && <p className="auth-field-error">{fieldErrors.name}</p>}
+                {fieldErrors.name && (
+                  <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {fieldErrors.name}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -162,7 +170,15 @@ function Signup() {
                     className={inputCls(fieldErrors.email)}
                   />
                 </div>
-                {fieldErrors.email && <p className="auth-field-error">{fieldErrors.email}</p>}
+                {fieldErrors.email && (
+                  <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {fieldErrors.email}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -190,7 +206,15 @@ function Signup() {
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
-                {fieldErrors.password && <p className="auth-field-error">{fieldErrors.password}</p>}
+                {fieldErrors.password && (
+                  <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    {fieldErrors.password}
+                  </p>
+                )}
 
                 {/* Password strength */}
                 {formData.password && (
@@ -257,6 +281,10 @@ function Signup() {
                 </div>
                 {(fieldErrors.confirmPassword || (formData.confirmPassword && !passwordsMatch)) && (
                   <p className="auth-field-error">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
                     {fieldErrors.confirmPassword || 'Passwords do not match'}
                   </p>
                 )}
@@ -280,7 +308,15 @@ function Signup() {
                   <span className="auth-link">Privacy Policy</span>
                 </span>
               </label>
-              {termsError && <p className="auth-field-error">{termsError}</p>}
+              {termsError && (
+                <p className="auth-field-error">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0">
+                    <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M7 4v3.5M7 9.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  {termsError}
+                </p>
+              )}
 
               {/* Submit */}
               <button type="submit" disabled={isLoading} className="auth-submit-btn">

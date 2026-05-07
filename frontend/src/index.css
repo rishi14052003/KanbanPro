@@ -289,10 +289,15 @@ body {
 .auth-field-error {
   font-size: 12px;
   color: var(--error);
-  margin-top: 5px;
+  margin-top: 6px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 6px;
+  line-height: 1.4;
 }
 
 /* ─────────────────────────────────────────────
