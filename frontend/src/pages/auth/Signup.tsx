@@ -69,13 +69,12 @@ function Signup() {
     if (!validateForm()) return
     setIsLoading(true)
     try {
-      const response = await authService.signup({
+      await authService.signup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
       })
-      authService.setToken(response.token)
       navigate('/dashboard')
     } catch (err: any) {
       setError(err.response?.data?.error || 'Signup failed. Please try again.')

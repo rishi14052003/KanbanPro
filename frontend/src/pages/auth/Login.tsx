@@ -36,10 +36,13 @@ function Login() {
     setIsLoading(true)
     try {
       const response = await authService.login(formData)
-      authService.setToken(response.token)
+      console.log('Login successful:', response)
+      console.log('Token stored:', localStorage.getItem('token'))
+      console.log('User stored:', localStorage.getItem('user'))
       if (rememberMe) localStorage.setItem('rememberMe', 'true')
       navigate('/dashboard')
     } catch (err: any) {
+      console.error('Login error:', err)
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.')
     } finally {
       setIsLoading(false)

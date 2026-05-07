@@ -24,16 +24,21 @@ export interface AuthResponse {
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/login', credentials)
+    authService.setToken(response.data.token)
+    authService.setUser(response.data.user)
     return response.data
   },
 
   signup: async (credentials: SignupCredentials): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/signup', credentials)
+    authService.setToken(response.data.token)
+    authService.setUser(response.data.user)
     return response.data
   },
 
   logout: () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
   },
 
   getToken: () => {
@@ -44,7 +49,21 @@ export const authService = {
     localStorage.setItem('token', token)
   },
 
+  getUser: () => {
+    const user = localStorage.getItem('user')
+    if (!user || user === 'undefined' || user === 'null') return null
+    try {
+      return JSON.parse(user)
+    } catch {
+      return null
+    }
+  },
+
+  setUser: (user: any) => {
+    if (user) localStorage.setItem('user', JSON.stringify(user))
+  },
+
   isAuthenticated: () => {
     return !!localStorage.getItem('token')
-  }
+  },
 }
