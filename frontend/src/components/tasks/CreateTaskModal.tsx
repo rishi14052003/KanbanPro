@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Modal, Button, Input } from '../../components/ui'
-import { AlertCircle } from 'lucide-react'
 
 interface CreateTaskModalProps {
   isOpen: boolean
@@ -118,14 +117,15 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onCr
               boxShadow: '0 1px 3px rgba(44,31,20,0.05)',
             }}
             onFocus={(e) => {
-              (e.target as HTMLTextAreaElement).style.borderColor = errors.description ? '#DC2626' : '#2C1F14'
-              (e.target as HTMLTextAreaElement).style.boxShadow = errors.description
-                ? '0 0 0 3px rgba(220,38,38,0.1)'
-                : '0 0 0 3px rgba(44,31,20,0.08)'
+              const borderColor = errors.description ? '#DC2626' : '#2C1F14'
+              const boxShadow = errors.description ? '0 0 0 3px rgba(220,38,38,0.1)' : '0 0 0 3px rgba(44,31,20,0.08)'
+              ;(e.target as HTMLTextAreaElement).style.borderColor = borderColor
+              ;(e.target as HTMLTextAreaElement).style.boxShadow = boxShadow
             }}
             onBlur={(e) => {
-              (e.target as HTMLTextAreaElement).style.borderColor = errors.description ? '#DC2626' : '#DDD0BB'
-              (e.target as HTMLTextAreaElement).style.boxShadow = '0 1px 3px rgba(44,31,20,0.05)'
+              const borderColor = errors.description ? '#DC2626' : '#DDD0BB'
+              ;(e.target as HTMLTextAreaElement).style.borderColor = borderColor
+              ;(e.target as HTMLTextAreaElement).style.boxShadow = '0 1px 3px rgba(44,31,20,0.05)'
             }}
           />
           {errors.description && (

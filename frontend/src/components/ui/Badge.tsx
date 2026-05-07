@@ -39,6 +39,33 @@ const Badge: React.FC<BadgeProps> = ({ children, variant = 'info', className = '
   return (
     <span
       className={className}
-      style={{\n        display: 'inline-flex',
+      style={{
+        display: 'inline-flex',
         alignItems: 'center',
-        gap: '5px',\n        fontSize: '11px',\n        fontWeight: 700,\n        letterSpacing: '0.02em',\n        color: style.color,\n        background: style.background,\n        borderRadius: '7px',\n        padding: '3px 9px',\n        fontFamily: font,\n      }}\n    >\n      <span\n        style={{\n          width: '6px',\n          height: '6px',\n          borderRadius: '50%',\n          background: style.dot,\n          display: 'inline-block',\n          flexShrink: 0,\n        }}\n      />\n      {children}\n    </span>\n  )\n}\n\nexport default Badge\n
+        gap: '5px',
+        fontSize: '11px',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
+        color: style.color,
+        background: style.background,
+        borderRadius: '7px',
+        padding: '3px 9px',
+        fontFamily: font,
+      }}
+    >
+      <span
+        style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: style.dot,
+          display: 'inline-block',
+          flexShrink: 0,
+        }}
+      />
+      {children}
+    </span>
+  )
+}
+
+export default Badge

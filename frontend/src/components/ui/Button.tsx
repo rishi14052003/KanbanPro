@@ -56,19 +56,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }}
         onMouseEnter={(e) => {
           if (!disabled && !loading) {
-            (e.currentTarget as HTMLElement).style.background = style.hover
+            ;(e.currentTarget as HTMLElement).style.background = style.hover
             if (variant === 'primary') {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(44,31,20,0.25)'
+              const transform = 'translateY(-2px)'
+              const boxShadow = '0 6px 20px rgba(44,31,20,0.25)'
+              ;(e.currentTarget as HTMLElement).style.transform = transform
+              ;(e.currentTarget as HTMLElement).style.boxShadow = boxShadow
             }
           }
         }}
         onMouseLeave={(e) => {
           if (!disabled && !loading) {
-            (e.currentTarget as HTMLElement).style.background = style.background
+            ;(e.currentTarget as HTMLElement).style.background = style.background
             if (variant === 'primary') {
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(44,31,20,0.15)'
+              const transform = 'translateY(0)'
+              const boxShadow = '0 4px 14px rgba(44,31,20,0.15)'
+              ;(e.currentTarget as HTMLElement).style.transform = transform
+              ;(e.currentTarget as HTMLElement).style.boxShadow = boxShadow
             }
           }
         }}
@@ -96,7 +100,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 
 Button.displayName = 'Button'
-  );
-};
 
-export default Button;
+export default Button

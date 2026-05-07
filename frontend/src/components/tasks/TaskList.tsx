@@ -200,14 +200,18 @@ const TaskList: React.FC<TaskListProps> = ({
                 }}
                 onMouseEnter={(e) => {
                   if (!isOpen) {
-                    (e.currentTarget as HTMLElement).style.background = '#F3EDE3'
-                    (e.currentTarget as HTMLElement).style.borderColor = '#DDD0BB'
+                    const background = '#F3EDE3'
+                    const borderColor = '#DDD0BB'
+                    ;(e.currentTarget as HTMLElement).style.background = background
+                    ;(e.currentTarget as HTMLElement).style.borderColor = borderColor
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isOpen) {
-                    (e.currentTarget as HTMLElement).style.background = '#FFFFFF'
-                    (e.currentTarget as HTMLElement).style.borderColor = '#EDE8DF'
+                    const background = '#FFFFFF'
+                    const borderColor = '#EDE8DF'
+                    ;(e.currentTarget as HTMLElement).style.background = background
+                    ;(e.currentTarget as HTMLElement).style.borderColor = borderColor
                   }
                 }}
               >

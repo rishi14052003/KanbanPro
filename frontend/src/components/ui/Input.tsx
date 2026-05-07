@@ -68,14 +68,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((
             outline: 'none',
           }}
           onFocus={(e) => {
-            (e.target as HTMLInputElement).style.borderColor = error ? '#DC2626' : '#2C1F14'
-            (e.target as HTMLInputElement).style.boxShadow = error
-              ? '0 0 0 3px rgba(220,38,38,0.1)'
-              : '0 0 0 3px rgba(44,31,20,0.08)'
+            const borderColor = error ? '#DC2626' : '#2C1F14'
+            const boxShadow = error ? '0 0 0 3px rgba(220,38,38,0.1)' : '0 0 0 3px rgba(44,31,20,0.08)'
+            ;(e.target as HTMLInputElement).style.borderColor = borderColor
+            ;(e.target as HTMLInputElement).style.boxShadow = boxShadow
           }}
           onBlur={(e) => {
-            (e.target as HTMLInputElement).style.borderColor = error ? '#DC2626' : '#DDD0BB'
-            (e.target as HTMLInputElement).style.boxShadow = '0 1px 3px rgba(44,31,20,0.05)'
+            const borderColor = error ? '#DC2626' : '#DDD0BB'
+            ;(e.target as HTMLInputElement).style.borderColor = borderColor
+            ;(e.target as HTMLInputElement).style.boxShadow = '0 1px 3px rgba(44,31,20,0.05)'
           }}
           {...props}
         />

@@ -1,1 +1,111 @@
-import React, { ImgHTMLAttributes } from 'react'\nimport { User } from 'lucide-react'\n\ntype AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'\n\ninterface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {\n  src?: string\n  name?: string\n  size?: AvatarSize\n  showInitials?: boolean\n}\n\nconst Avatar = React.forwardRef<HTMLImageElement, AvatarProps>((\n  { src, name = '', size = 'md', showInitials = true, ...props },\n  ref\n) => {\n  const sizeMap: Record<AvatarSize, { container: number; text: string; icon: number }> = {\n    xs: { container: 28, text: '10px', icon: 12 },\n    sm: { container: 36, text: '12px', icon: 16 },\n    md: { container: 44, text: '14px', icon: 20 },\n    lg: { container: 56, text: '16px', icon: 24 },\n    xl: { container: 72, text: '20px', icon: 32 },\n  }\n\n  const dims = sizeMap[size]\n  const initials = name\n    .split(' ')\n    .slice(0, 2)\n    .map((n) => n[0]?.toUpperCase())\n    .join('')\n\n  // Generate consistent color from name\n  const colors = [\n    { bg: '#F3EDE3', color: '#7C6348' },\n    { bg: '#FEF3C7', color: '#92600A' },\n    { bg: '#FED7AA', color: '#9A3412' },\n    { bg: '#D1FAE5', color: '#14532D' },\n    { bg: '#FEE2E2', color: '#7F1D1D' },\n  ]\n  const colorIndex = (name.length + name.charCodeAt(0)) % colors.length\n  const colorScheme = colors[colorIndex]\n\n  return (\n    <div\n      style={{\n        position: 'relative',\n        display: 'inline-flex',\n        alignItems: 'center',\n        justifyContent: 'center',\n        flexShrink: 0,\n      }}\n    >\n      {src ? (\n        <img\n          ref={ref}\n          src={src}\n          alt={name}\n          style={{\n            width: `${dims.container}px`,\n            height: `${dims.container}px`,\n            borderRadius: '50%',\n            objectFit: 'cover',\n            border: '2px solid #FFFFFF',\n            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',\n          }}\n          {...props}\n        />\n      ) : name && showInitials ? (\n        <div\n          style={{\n            width: `${dims.container}px`,\n            height: `${dims.container}px`,\n            borderRadius: '50%',\n            background: colorScheme.bg,\n            display: 'flex',\n            alignItems: 'center',\n            justifyContent: 'center',\n            fontSize: dims.text,\n            fontWeight: 700,\n            color: colorScheme.color,\n            border: '2px solid #FFFFFF',\n            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',\n            fontFamily: \"'DM Sans', 'Helvetica Neue', sans-serif\",\n          }}\n        >\n          {initials}\n        </div>\n      ) : (\n        <div\n          style={{\n            width: `${dims.container}px`,\n            height: `${dims.container}px`,\n            borderRadius: '50%',\n            background: '#F3EDE3',\n            display: 'flex',\n            alignItems: 'center',\n            justifyContent: 'center',\n            border: '2px solid #FFFFFF',\n            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',\n          }}\n        >\n          <User size={dims.icon} color=\"#A0917E\" />\n        </div>\n      )}\n    </div>\n  )\n})\n\nAvatar.displayName = 'Avatar'\n\nexport default Avatar\n
+import React, { ImgHTMLAttributes } from 'react'
+import { User } from 'lucide-react'
+
+type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+
+interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
+  src?: string
+  name?: string
+  size?: AvatarSize
+  showInitials?: boolean
+}
+
+const Avatar = React.forwardRef<HTMLImageElement, AvatarProps>((
+  { src, name = '', size = 'md', showInitials = true, ...props },
+  ref
+) => {
+  const sizeMap: Record<AvatarSize, { container: number; text: string; icon: number }> = {
+    xs: { container: 28, text: '10px', icon: 12 },
+    sm: { container: 36, text: '12px', icon: 16 },
+    md: { container: 44, text: '14px', icon: 20 },
+    lg: { container: 56, text: '16px', icon: 24 },
+    xl: { container: 72, text: '20px', icon: 32 },
+  }
+
+  const dims = sizeMap[size]
+  const initials = name
+    .split(' ')
+    .slice(0, 2)
+    .map((n) => n[0]?.toUpperCase())
+    .join('')
+
+  // Generate consistent color from name
+  const colors = [
+    { bg: '#F3EDE3', color: '#7C6348' },
+    { bg: '#FEF3C7', color: '#92600A' },
+    { bg: '#FED7AA', color: '#9A3412' },
+    { bg: '#D1FAE5', color: '#14532D' },
+    { bg: '#FEE2E2', color: '#7F1D1D' },
+  ]
+  const colorIndex = (name.length + name.charCodeAt(0)) % colors.length
+  const colorScheme = colors[colorIndex]
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+      }}
+    >
+      {src ? (
+        <img
+          ref={ref}
+          src={src}
+          alt={name}
+          style={{
+            width: `${dims.container}px`,
+            height: `${dims.container}px`,
+            borderRadius: '50%',
+            objectFit: 'cover',
+            border: '2px solid #FFFFFF',
+            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',
+          }}
+          {...props}
+        />
+      ) : name && showInitials ? (
+        <div
+          style={{
+            width: `${dims.container}px`,
+            height: `${dims.container}px`,
+            borderRadius: '50%',
+            background: colorScheme.bg,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: dims.text,
+            fontWeight: 700,
+            color: colorScheme.color,
+            border: '2px solid #FFFFFF',
+            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',
+            fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+          }}
+        >
+          {initials}
+        </div>
+      ) : (
+        <div
+          style={{
+            width: `${dims.container}px`,
+            height: `${dims.container}px`,
+            borderRadius: '50%',
+            background: '#F3EDE3',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '2px solid #FFFFFF',
+            boxShadow: '0 2px 8px rgba(44,31,20,0.1)',
+          }}
+        >
+          <User size={dims.icon} color="#A0917E" />
+        </div>
+      )}
+    </div>
+  )
+})
+
+Avatar.displayName = 'Avatar'
+
+export default Avatar
