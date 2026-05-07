@@ -257,9 +257,9 @@ function Signup() {
                 <input type="checkbox" required className="auth-checkbox" />
                 <span>
                   I agree to the{' '}
-                  <Link to="/terms" className="auth-link">Terms of Service</Link>
+                  <span className="auth-link">Terms of Service</span>
                   {' '}and{' '}
-                  <Link to="/privacy" className="auth-link">Privacy Policy</Link>
+                  <span className="auth-link">Privacy Policy</span>
                 </span>
               </label>
 
