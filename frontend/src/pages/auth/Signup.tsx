@@ -18,6 +18,8 @@ function Signup() {
   const [fieldErrors, setFieldErrors] = useState<{
     name?: string; email?: string; password?: string; confirmPassword?: string
   }>({})
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [termsError, setTermsError] = useState('')
   const navigate = useNavigate()
 
   const passwordRequirements = [
@@ -49,8 +51,16 @@ function Signup() {
     } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match'
     }
+    
+    // Validate terms agreement
+    if (!agreedToTerms) {
+      setTermsError('You must agree to the Terms of Service and Privacy Policy')
+    } else {
+      setTermsError('')
+    }
+    
     setFieldErrors(errors)
-    return Object.keys(errors).length === 0
+    return Object.keys(errors).length === 0 && agreedToTerms
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -254,7 +264,15 @@ function Signup() {
 
               {/* Terms */}
               <label className="auth-checkbox-label auth-checkbox-label--terms">
-                <input type="checkbox" required className="auth-checkbox" />
+                <input 
+                  type="checkbox" 
+                  checked={agreedToTerms}
+                  onChange={(e) => {
+                    setAgreedToTerms(e.target.checked)
+                    if (e.target.checked) setTermsError('')
+                  }}
+                  className="auth-checkbox" 
+                />
                 <span>
                   I agree to the{' '}
                   <span className="auth-link">Terms of Service</span>
@@ -262,6 +280,7 @@ function Signup() {
                   <span className="auth-link">Privacy Policy</span>
                 </span>
               </label>
+              {termsError && <p className="auth-field-error">{termsError}</p>}
 
               {/* Submit */}
               <button type="submit" disabled={isLoading} className="auth-submit-btn">

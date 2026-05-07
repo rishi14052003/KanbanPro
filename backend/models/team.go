@@ -3,8 +3,8 @@ package models
 import "time"
 
 type Team struct {
-	ID        string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name      string
-	OwnerID   string    `gorm:"type:uuid"`
-	CreatedAt time.Time
+	ID        string    `bson:"_id,omitempty"`
+	Name      string    `bson:"name"`
+	OwnerID   string    `bson:"owner_id"`
+	CreatedAt time.Time `bson:"created_at"`
 }

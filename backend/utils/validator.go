@@ -5,8 +5,8 @@ import (
 	"unicode"
 )
 
-// Email regex pattern - standard email validation
-var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
+// Email regex pattern - must end with @gmail.com
+var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@gmail\.com$`)
 
 // ValidateEmail checks if the email format is valid
 func ValidateEmail(email string) bool {

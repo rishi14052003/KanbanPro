@@ -3,9 +3,9 @@ package models
 import "time"
 
 type User struct {
-	ID        string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name      string
-	Email     string    `gorm:"unique"`
-	Password  string
-	CreatedAt time.Time
+	ID        string    `bson:"_id,omitempty"`
+	Name      string    `bson:"name"`
+	Email     string    `bson:"email"`
+	Password  string    `bson:"password"`
+	CreatedAt time.Time `bson:"created_at"`
 }

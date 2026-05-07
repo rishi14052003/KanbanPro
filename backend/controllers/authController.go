@@ -1,14 +1,17 @@
 package controllers
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"saas-task-manager/config"
 	"saas-task-manager/models"
 	"saas-task-manager/utils"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Signup(c *gin.Context) {
@@ -27,7 +30,7 @@ func Signup(c *gin.Context) {
 
 	// Validate email format
 	if !utils.ValidateEmail(user.Email) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email must end with @gmail.com"})
 		return
 	}
 
@@ -38,8 +41,12 @@ func Signup(c *gin.Context) {
 	}
 
 	// Check if email already exists
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	var existingUser models.User
-	if err := config.DB.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
+	err := config.UserCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&existingUser)
+	if err == nil {
 		c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
 		return
 	}
@@ -51,9 +58,17 @@ func Signup(c *gin.Context) {
 		return
 	}
 	user.Password = hashed
+	user.CreatedAt = time.Now()
+	user.ID = primitive.NewObjectID().Hex()
 
 	// Create user
-	if err := config.DB.Create(&user).Error; err != nil {
+	_, err = config.UserCollection.InsertOne(ctx, user)
+	if err != nil {
+		// Check for duplicate key error (email already exists)
+		if errors.Is(err, errors.New("duplicate key error")) || err.Error() == "duplicate key error" {
+			c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}
@@ -86,13 +101,13 @@ func Login(c *gin.Context) {
 	}
 
 	// Check if user exists
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	var user models.User
-	if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong Email Entered"})
-			return
-		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+	err := config.UserCollection.FindOne(ctx, bson.M{"email": input.Email}).Decode(&user)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong Email Entered"})
 		return
 	}
 

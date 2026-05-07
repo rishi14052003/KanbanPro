@@ -1,19 +1,39 @@
 package controllers
 
 import (
+	"context"
 	"net/http"
 	"saas-task-manager/config"
 	"saas-task-manager/models"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetTasks(c *gin.Context) {
 	var tasks []models.Task
 	userID := c.GetString("user_id")
 
-	if err := config.DB.Where("assigned_to = ? OR created_by = ?", userID, userID).Find(&tasks).Error; err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{
+		"$or": []bson.M{
+			{"assigned_to": userID},
+			{"created_by": userID},
+		},
+	}
+
+	cursor, err := config.TaskCollection.Find(ctx, filter)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch tasks"})
+		return
+	}
+
+	if err = cursor.All(ctx, &tasks); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode tasks"})
 		return
 	}
 
@@ -30,8 +50,14 @@ func CreateTask(c *gin.Context) {
 	}
 
 	task.CreatedBy = userID
+	task.ID = primitive.NewObjectID().Hex()
+	task.CreatedAt = time.Now()
 
-	if err := config.DB.Create(&task).Error; err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := config.TaskCollection.InsertOne(ctx, task)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create task"})
 		return
 	}
@@ -43,7 +69,10 @@ func UpdateTask(c *gin.Context) {
 	var task models.Task
 	taskID := c.Param("id")
 
-	if err := config.DB.First(&task, "id = ?", taskID).Error; err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := config.TaskCollection.FindOne(ctx, bson.M{"_id": taskID}).Decode(&task); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
 		return
 	}
@@ -53,7 +82,9 @@ func UpdateTask(c *gin.Context) {
 		return
 	}
 
-	if err := config.DB.Save(&task).Error; err != nil {
+	update := bson.M{"$set": task}
+	_, err := config.TaskCollection.UpdateOne(ctx, bson.M{"_id": taskID}, update)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update task"})
 		return
 	}
@@ -64,7 +95,11 @@ func UpdateTask(c *gin.Context) {
 func DeleteTask(c *gin.Context) {
 	taskID := c.Param("id")
 
-	if err := config.DB.Delete(&models.Task{}, "id = ?", taskID).Error; err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := config.TaskCollection.DeleteOne(ctx, bson.M{"_id": taskID})
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete task"})
 		return
 	}
